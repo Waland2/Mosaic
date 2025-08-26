@@ -1,8 +1,13 @@
 name: Release
+
+permissions:
+  contents: write
+
 on:
   push:
     tags:
       - '*'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,11 +15,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
+
       - run: npm ci
       - run: npm run build
+
       - run: |
           TAG="${GITHUB_REF_NAME#v}"
           FILE_VER=$(jq -r .version manifest.json)
@@ -22,10 +30,10 @@ jobs:
           mkdir -p mosaic
           cp manifest.json main.js styles.css mosaic/ 2>/dev/null || true
           zip -r "mosaic-${TAG}.zip" mosaic
+
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           files: |
             mosaic-*.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
