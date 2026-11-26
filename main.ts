@@ -1,14 +1,21 @@
-import { App, Editor, MarkdownView, Notice, Plugin, PluginSettingTab, Setting, TFile, TFolder } from "obsidian";
+import { App, Editor, MarkdownView, Notice, Plugin, PluginSettingTab, Setting, requireApiVersion, TFile, TFolder } from "obsidian";
 import { arrayToMarkdownTable, decryptText, encryptText, looksLikeEncryptedPayload, textToArray } from "utils";
 import { HelloPluginSettings, DEFAULT_SETTINGS } from "./settings";
 import { FolderPickerModal, PassphraseModal } from "modals";
 import { TEXT_EXTS } from "./constants";
 
+import { registerTableLayout } from "./table-layout";
+
 export default class MosaicPlugin extends Plugin {
     settings: HelloPluginSettings;
 
+    setTableLayoutEnabled: (enabled: boolean) => void;
+
     async onload() {
         await this.loadSettings();
+        if (requireApiVersion("1.5.0")) {
+            this.setTableLayoutEnabled = registerTableLayout(this, this.settings.enhancedTables);
+        }
 
         this.addCommand({
             id: "insert-table-from-selection",
@@ -231,6 +238,21 @@ class MosaicSettingTab extends PluginSettingTab {
     display(): void {
         const { containerEl } = this;
         containerEl.empty();
+
+        const supportsTables = requireApiVersion("1.5.0");
+        new Setting(containerEl)
+            .setName("Enhanced Markdown tables")
+            .setDesc(supportsTables
+                ? "Resize tables and columns, center tables, and merge or split cells in Live Preview."
+                : "Enhanced Markdown tables require Obsidian 1.5 or later.")
+            .addToggle(toggle => toggle
+                .setValue(supportsTables && this.plugin.settings.enhancedTables)
+                .setDisabled(!supportsTables)
+                .onChange(async enabled => {
+                    this.plugin.settings.enhancedTables = enabled;
+                    this.plugin.setTableLayoutEnabled(enabled);
+                    await this.plugin.saveSettings();
+                }));
 
         new Setting(containerEl)
             .setName("Table separators")

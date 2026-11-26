@@ -32,6 +32,22 @@ Mosaic is an [Obsidian](https://obsidian.md/) plugin that converts text selectio
 * **Encrypt Folder by Key** - encrypt all supported text files inside a chosen folder (skips already encrypted).
 * **Decrypt Folder by Key** - decrypt all supported text files inside a chosen folder (skips files that are not encrypted or cannot be decrypted).
 
+### Enhanced Markdown tables
+
+In Obsidian 1.5 or later, turn on **Settings → Mosaic → Enhanced Markdown tables**. The setting is off by default. If you previously used the standalone Native Table Layout plugin, disable it before enabling the Mosaic setting. Existing table layouts carry over.
+
+In Live Preview, tables can extend beyond the note's text width. Use the following controls:
+
+| Action | Gesture |
+| --- | --- |
+| Resize a column | Drag the border between two columns. |
+| Resize the whole table | Drag either outer border. Double-click it to restore full width. |
+| Center a table | Right-click either outer border and toggle **Center table**. Turning it off restores Obsidian's alignment. |
+| Merge cells | Alt-click (Option-click on macOS) two opposite corners of a rectangle. Press Escape to cancel. |
+| Split a merged cell | Alt-click or Option-click the merged cell. |
+
+Reading view displays the saved layout. Mosaic stores layout information in an HTML comment in the table header. Merging displays the top-left cell and preserves the other cells' contents for splitting. Turning the setting off restores native rendering and keeps the saved layout for next time.
+
 ## Important Information
 Obsidian’s **File Recovery** core plugin stores file history in an unencrypted form, even if the files themselves are encrypted with Mosaic.  
 For better security, it is strongly recommended to **disable File Recovery** in *Settings → Core plugins* when using Mosaic for encryption.

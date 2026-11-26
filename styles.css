@@ -1,8 +1,108 @@
-/*
+/* Container units follow the width of each pane, including split views. */
+.markdown-source-view.mod-cm6 > .cm-editor > .cm-scroller:has(.mosaic-tl-table),
+.markdown-reading-view > .markdown-preview-view:has(.mosaic-tl-table) {
+	container-type: inline-size;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+/* Leave the native leading margin intact and extend the trailing edge into the pane. */
+.markdown-source-view.mod-cm6 .cm-content > .cm-table-widget:has(> .table-wrapper > .mosaic-tl-table) {
+	margin-inline-end: calc(min(0px, 50% - 50cqw) - var(--size-4-4)) !important;
+}
 
-If your plugin does not need CSS, delete this file.
+.markdown-reading-view .markdown-preview-sizer > .el-table:has(> .mosaic-tl-table) {
+	margin-inline-end: min(0px, 50% - 50cqw);
+}
 
-*/
+.markdown-source-view.mod-cm6 .cm-content > .cm-table-widget:has(> .table-wrapper > .mosaic-tl-centered),
+.markdown-reading-view .markdown-preview-sizer > .el-table:has(> .mosaic-tl-centered) {
+	box-sizing: border-box;
+	width: 100cqw;
+	max-width: none;
+	margin-inline: calc(50% - 50cqw) !important;
+}
+
+.markdown-source-view.mod-cm6 .cm-table-widget > .table-wrapper:has(> .mosaic-tl-table) {
+	min-width: 0;
+	width: max(var(--mosaic-tl-table-width, 100%), var(--mosaic-tl-wrapper-min, 0px));
+	inset-inline-start: var(--mosaic-tl-drag-shift, auto);
+}
+
+.markdown-reading-view .el-table:has(.mosaic-tl-table) {
+	overflow-x: auto;
+}
+
+.markdown-rendered table.mosaic-tl-table {
+	table-layout: fixed;
+	width: 100%;
+	min-width: var(--mosaic-tl-min);
+	margin-block: 0;
+}
+
+.mosaic-tl-table > :is(thead, tbody, tfoot) > tr > :is(th, td) {
+	overflow-wrap: anywhere;
+}
+
+.mosaic-tl-table > :is(thead, tbody, tfoot) > tr > .mosaic-tl-covered {
+	display: none !important;
+}
+
+.cm-table-widget .mosaic-tl-table .mosaic-tl-first {
+	outline: 2px solid var(--interactive-accent);
+	outline-offset: -2px;
+}
+
+.markdown-reading-view table.mosaic-tl-table {
+	width: var(--mosaic-tl-table-width, 100%);
+}
+
+.markdown-source-view.mod-cm6 .cm-table-widget > .table-wrapper:has(> .mosaic-tl-centered),
+.markdown-reading-view table.mosaic-tl-centered {
+	margin-inline: auto;
+}
+
+/* Transparent hit targets keep resizing and the alignment menu on both borders. */
+.mosaic-tl-table-grip {
+	position: absolute;
+	inset-block: 0;
+	width: 8px;
+	z-index: 5;
+	cursor: ew-resize;
+	touch-action: none;
+	user-select: none;
+}
+
+.mosaic-tl-table-grip[data-side="start"] { inset-inline-start: 0; }
+.mosaic-tl-table-grip[data-side="end"] { inset-inline-end: 0; }
+
+.mosaic-tl-grip {
+	position: absolute;
+	z-index: 4;
+	inset-block: 0;
+	inset-inline-end: -4px;
+	width: 8px;
+	cursor: col-resize;
+	touch-action: none;
+	user-select: none;
+}
+
+.mosaic-tl-grip:hover {
+	background: linear-gradient(to right, transparent 3px, var(--interactive-accent) 3px 5px, transparent 5px);
+}
+
+/* Keep the Markdown paragraph separator editable when the caret is on it. */
+.markdown-source-view.mod-cm6 .cm-content > .cm-line:not(.cm-active):has(> br:only-child):has(+ .cm-table-widget .mosaic-tl-table) {
+	min-height: 0;
+	height: 0;
+	line-height: 0;
+	padding-block: 0;
+	overflow: hidden;
+}
+
+.markdown-source-view.mod-cm6 .cm-content > .cm-table-widget:has(.mosaic-tl-table) {
+	padding-block-start: 0;
+}
+.markdown-source-view.mod-cm6 .cm-table-widget .mosaic-tl-table .table-col-drag-handle {
+	inset-block-end: auto;
+	top: 0;
+	height: 5px;
+}
